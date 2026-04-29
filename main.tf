@@ -49,17 +49,14 @@ resource "null_resource" "build_app" {
   }
 }
 
-resource "docker_image" "app_image" {
-  name = "tp-web-app:latest"
-
-  depends_on = [null_resource.build_app]
-}
-
 resource "docker_container" "app_container" {
   name  = "tp-app-web"
-  image = docker_image.app_image.image_id
+  image = "tp-web-app:latest"
 
-  depends_on = [docker_container.db_container]
+  depends_on = [
+    null_resource.build_app,
+    docker_container.db_container
+  ]
 
   ports {
     internal = 80
