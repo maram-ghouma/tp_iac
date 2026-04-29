@@ -26,5 +26,5 @@ variable "app_port_external" {
 variable "db_port_external" {
   description = "External port for PostgreSQL."
   type        = number
-  default     = 5433
+  default     = 5434
 }
