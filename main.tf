@@ -50,8 +50,12 @@ resource "null_resource" "build_app" {
 }
 
 resource "docker_image" "app_image" {
-  name       = "tp-web-app:latest"
-  depends_on = [null_resource.build_app]
+  name = "tp-web-app:latest"
+
+  build {
+    context    = "."
+    dockerfile = "Dockerfile_app"
+  }
 }
 
 resource "docker_container" "app_container" {
