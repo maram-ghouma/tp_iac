@@ -1,30 +1,31 @@
-# --- Database Variables ---
+# --- Variables de Base de Données (PostgreSQL) ---
 variable "db_name" {
-  description = "Name of the PostgreSQL database."
+  description = "Nom de la base de données PostgreSQL."
   type        = string
   default     = "devops_db"
 }
 
 variable "db_user" {
-  description = "PostgreSQL username."
+  description = "Nom d'utilisateur PostgreSQL."
   type        = string
   default     = "devops_user"
 }
 
 variable "db_password" {
-  description = "PostgreSQL password."
+  description = "Mot de passe PostgreSQL (ATTENTION: Simulé, ne pas utiliser en Prod !)"
   type        = string
   default     = "strongpassword123"
 }
 
-# --- Application Variables ---
+# --- Variables d'Application ---
 variable "app_port_external" {
-  description = "External port to access the web app (maps to internal port 80)."
+  description = "Port externe pour accéder à l'application web (mappé au 80 interne)."
   type        = number
   default     = 8080
 }
-variable "db_port_external" {
-  description = "External port for PostgreSQL."
+
+variable "db_external_port" {
+  description = "Port externe pour accéder à PostgreSQL (mappé au 5432 interne)."
   type        = number
-  default     = 5434
+  default     = 5435
 }
