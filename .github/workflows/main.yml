@@ -1,10 +1,8 @@
-name: Terraform IaC Pipeline
+name: Terraform IaC CI/CD
 
-# Trigger: runs on every push to main
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   terraform:
@@ -12,27 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1 - Checkout the code
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      # --- Préparation (Setup) ---
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # Step 2 - Install Terraform
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
+        uses: hashicorp/setup-terraform@v3
 
-      # Step 3 - Initialize (download providers)
+      # --- Initialisation ---
       - name: Terraform Init
         run: terraform init
 
-      # Step 4 - Plan (dry run, detect changes)
+      # --- Validation & Revue ---
       - name: Terraform Plan
-        run: terraform plan
+        id: plan
+        run: terraform plan -var="db_password=${{ secrets.DB_PASSWORD }}"
 
-      # Step 5 - Apply ONLY if Plan succeeded
+      # --- Déploiement Continu ---
+      # N'est exécuté que si l'étape Plan précédente a réussi
       - name: Terraform Apply
-        if: success()
-        run: terraform apply -auto-approve
-        env:
-          TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+        if: steps.plan.outcome == 'success'
+        run: terraform apply -auto-approve -var="db_password=${{ secrets.DB_PASSWORD }}"
